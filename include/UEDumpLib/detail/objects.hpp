@@ -10,19 +10,20 @@ namespace UEDump {
 
     class Object {
     public:
-      Object(uintptr_t object) : object_(object) {}
+      Object(uintptr_t object, const FNamePool& pool) : object_(object), pool_(pool) {}
       operator bool() const { return object_; }
       uintptr_t Address() const { return object_; }
-      std::string Name(const FNamePool& pool) const;
+      std::string Name() const;
       Object Class() const;
       Object Outer() const;
 
     private:
-      uintptr_t object_;
+      const uintptr_t object_;
+      const FNamePool& pool_;
     };
 
     struct TUObjectArray {
-      [[nodiscard]] std::optional<Object> GetObject(uint32_t id) const;
+      [[nodiscard]] std::optional<Object> GetObject(uint32_t id, const FNamePool& pool) const;
 
       uintptr_t objects;
       uintptr_t preallocated_objects;

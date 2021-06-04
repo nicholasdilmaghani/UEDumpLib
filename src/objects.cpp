@@ -5,7 +5,7 @@
 
 namespace UEDump {
   namespace detail {
-    std::optional<Object> TUObjectArray::GetObject(uint32_t id) const {
+    std::optional<Object> TUObjectArray::GetObject(uint32_t id, const FNamePool& pool) const {
       const uint32_t chunk_index = id / 0x10000;
       const uint32_t index = id % 0x10000;
 
@@ -20,22 +20,22 @@ namespace UEDump {
 
       if (!obj) return {};
 
-      return Object{ obj };
+      return Object{ obj, pool };
     }
 
-    std::string Object::Name(const FNamePool& pool) const {
+    std::string Object::Name() const {
       const auto name = FName{ object_ + MemoryLayout::UObject::Name };
-      return std::string(name.entry(pool));
+      return std::string(name.entry(pool_));
     }
 
     // TODO: Implement.
     Object Object::Class() const {
-      return { 0 };
+      return { 0, pool_ };
     }
 
     // TODO: Implement.
     Object Object::Outer() const {
-      return { 0 };
+      return { 0, pool_ };
     }
 
   }
