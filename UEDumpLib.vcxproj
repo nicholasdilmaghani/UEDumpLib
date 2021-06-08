@@ -158,10 +158,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\UEDumpLib\callbacks.hpp" />
     <ClInclude Include="include\UEDumpLib\detail.hpp" />
     <ClInclude Include="include\UEDumpLib\detail\names.hpp" />
     <ClInclude Include="include\UEDumpLib\detail\objects.hpp" />
     <ClInclude Include="include\UEDumpLib\UEDump.hpp" />
+    <ClInclude Include="src\private.hpp" />
     <ClInclude Include="src\structures.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 
 #include "../include/UEDumpLib/UEDump.hpp"
 #include "structures.hpp"
+#include "private.hpp"
 
 namespace UEDump {
   namespace detail {
@@ -12,7 +13,7 @@ namespace UEDump {
       if (id >= num_elements) return {};
       if (chunk_index >= num_chunks) return {};
 
-      const auto chunk = read<uintptr_t>(objects + chunk_index);
+      const auto chunk = read<uintptr_t>(objects + chunk_index * sizeof(void*));
 
       if (!chunk) return {};
 
@@ -30,13 +31,14 @@ namespace UEDump {
 
     // TODO: Implement.
     Object Object::Class() const {
-      return { 0, pool_ };
+      const auto cls = read<uint64_t>(object_ + MemoryLayout::UObject::Class);
+      return { cls, pool_ };
     }
 
     // TODO: Implement.
     Object Object::Outer() const {
-      return { 0, pool_ };
+      const auto outer = read<uint64_t>(object_ + MemoryLayout::UObject::Outer);
+      return { outer, pool_ };
     }
-
   }
 }

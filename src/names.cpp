@@ -1,7 +1,18 @@
 #include "../include/UEDumpLib/UEDump.hpp"
 #include "structures.hpp"
+#include "private.hpp"
 
 namespace UEDump {
+  detail::FNameEntry detail::FNamePool::GetEntry(FNameEntryHandle handle) const {
+    if (handle.block >= 8192) {
+      throw std::exception();
+    }
+
+    const auto block = blocks.get()[handle.block];
+    const auto name_entry_addr = block + handle.offset * MemoryLayout::Stride;
+    return FNameEntry{ name_entry_addr };
+  }
+
   std::pair<bool, uint16_t> detail::FNameEntry::Info() const {
     const auto info = read<uint16_t>(object_ + MemoryLayout::FNameEntry::Info);
     const auto length = info >> MemoryLayout::FNameEntry::LenBit;
@@ -20,8 +31,8 @@ namespace UEDump {
     std::string buffer{ "", length };
     read(object_ + MemoryLayout::FNameEntry::HeaderSize, buffer.data(), length);
 
-    if (fn_decrypt) {
-      fn_decrypt(buffer.data(), length);
+    if (callbacks::decrypt) {
+      callbacks::decrypt(buffer.data(), length);
     }
 
     return buffer;

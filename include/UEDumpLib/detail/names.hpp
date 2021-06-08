@@ -45,12 +45,14 @@ namespace UEDump {
       [[nodiscard]] FNameEntry GetEntry(FNameEntryHandle handle) const;
 
       friend ObjectManager;
+      friend FNameEntry;
+      friend FName;
 
     private:
       uint8_t lock[8];
       uint32_t current_block;
       uint32_t current_byte_cursor;
-      std::unique_ptr<FNameEntry[]> blocks;
+      std::unique_ptr<uintptr_t[]> blocks;
     };
   }
 
