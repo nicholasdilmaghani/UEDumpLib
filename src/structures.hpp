@@ -50,8 +50,8 @@ namespace MemoryLayout {
     constexpr uint16_t Supernamespace = 0x48;
     // Offset to children array
     constexpr uint16_t Children = 0x50;
-    constexpr uint16_t ChildProperties = 0x5C;
-    constexpr uint16_t PropertiesSize = 0x58;
+    constexpr uint16_t ChildProperties = 0x58;
+    constexpr uint16_t PropertiesSize = 0x60;
   };
 
   namespace UEnum {
