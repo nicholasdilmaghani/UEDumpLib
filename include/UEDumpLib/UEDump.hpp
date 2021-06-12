@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <vector>
+#include <map>
 
 #include "callbacks.hpp"
 #include "detail.hpp"
@@ -26,6 +27,7 @@ namespace UEDump {
     [[nodiscard]] std::vector<detail::Object> FindAll(const std::string& name) const;
     [[nodiscard]] std::vector<detail::Object> FindAllOfClass(const detail::Object& cls) const;
 
+    const detail::FNamePool& GetNamePool() const { return name_pool_; }
     [[nodiscard]] std::string GetPoolEntry(uint32_t id) const;
 
   private:
@@ -33,7 +35,15 @@ namespace UEDump {
     detail::TUObjectArray objects_array_;
   };
 
-  class Dumper {
-    Dumper(ObjectManager& object_manager);
+  class PropertyManager {
+  public:
+    PropertyManager(const ObjectManager& object_manager);
+
+    std::unordered_map<std::string, std::unordered_map<std::string, unsigned>> classes_;
+
+  private:
+    void GeneratePropertyMap();
+
+    const ObjectManager& object_manager_;
   };
 }

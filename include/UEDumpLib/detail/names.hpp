@@ -42,6 +42,7 @@ namespace UEDump {
     class FNamePool {
     public:
       FNamePool() : lock{ 0 }, current_block{ 0 }, current_byte_cursor{ 0 } {}
+
       [[nodiscard]] FNameEntry GetEntry(FNameEntryHandle handle) const;
 
       friend ObjectManager;

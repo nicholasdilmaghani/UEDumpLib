@@ -170,6 +170,7 @@
     <ClCompile Include="src\names.cpp" />
     <ClCompile Include="src\objects.cpp" />
     <ClCompile Include="src\object_manager.cpp" />
+    <ClCompile Include="src\property_manager.cpp" />
     <ClCompile Include="src\UEDump.cpp" />
   </ItemGroup>
   <ItemGroup>

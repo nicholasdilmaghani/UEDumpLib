@@ -2,23 +2,33 @@
 
 #include "names.hpp"
 
+#include <string>
+#include <map>
+
 namespace UEDump {
   namespace detail {
     class Object;
-    class ObjectClass; // TODO: Implement.
     class TUObjectArray;
 
     class Object {
     public:
       Object(uintptr_t object, const FNamePool& pool) : object_(object), pool_(pool) {}
+
+      Object(const Object& old) : object_(old.object_), pool_(old.pool_) {}
+      Object& operator=(const Object& old) { object_ = old.object_; return *this; }
+
       operator bool() const { return object_; }
       uintptr_t Address() const { return object_; }
       std::string Name() const;
+      std::string FullName() const;
+      std::string CppName() const;
       Object Class() const;
       Object Outer() const;
+      bool IsDerivedFrom(Object obj);
+      std::unordered_map<std::string, unsigned> Properties(const FNamePool& pool) const;
 
     private:
-      const uintptr_t object_;
+      uintptr_t object_;
       const FNamePool& pool_;
     };
 

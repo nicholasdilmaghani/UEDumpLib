@@ -29,16 +29,57 @@ namespace UEDump {
       return std::string(name.entry(pool_));
     }
 
-    // TODO: Implement.
+    std::string Object::FullName() const {
+      std::string full_name;
+
+      for(Object outer = Outer(); outer.object_; outer = outer.Outer()) {
+        full_name = outer.Name() + "." + full_name;
+      }
+
+      full_name = Class().Name() + " " + full_name + Name();
+
+      return full_name;
+    }
+
     Object Object::Class() const {
       const auto cls = read<uint64_t>(object_ + MemoryLayout::UObject::Class);
       return { cls, pool_ };
     }
 
-    // TODO: Implement.
     Object Object::Outer() const {
       const auto outer = read<uint64_t>(object_ + MemoryLayout::UObject::Outer);
       return { outer, pool_ };
+    }
+
+    std::unordered_map<std::string, unsigned> Object::Properties(const FNamePool& pool) const {
+      std::unordered_map<std::string, unsigned> properties;
+
+      auto prop = read<uint64_t>(object_ + MemoryLayout::UStruct::ChildProperties);
+
+      while (prop) {
+        const auto fname = FName{ prop + MemoryLayout::FField::Name };
+        const auto name = std::string(fname.entry(pool));
+        const auto offset = read<uint32_t>(prop + MemoryLayout::FProperty::Offset);
+
+        properties[name] = offset;
+
+        prop = read<uint64_t>(prop + MemoryLayout::FField::Next);
+      }
+
+      /*
+      auto child = read<uint64_t>(object_ + MemoryLayout::UStruct::Children);
+
+      while (child) {
+        const auto fname = FName{ prop + MemoryLayout::FField::Name };
+        const auto name = std::string(fname.entry(pool));
+        const auto offset = read<uint32_t>(prop + MemoryLayout::FProperty::Offset);
+
+        properties[name] = offset;
+        child = read<uint64_t>(prop + MemoryLayout::UField::Next);
+      }
+      */
+
+      return properties;
     }
   }
 }
